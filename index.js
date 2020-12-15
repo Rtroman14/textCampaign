@@ -13,7 +13,7 @@ const textContact = async () => {
         const texted = await highLevel(contact);
 
         // if successful, update record
-        if (texted.status == "200") 
+        if (texted.status == "200") {
             // update in airtable
             await updateRecord("In High Level", record.id);
             console.log("Texted", contact.name);
