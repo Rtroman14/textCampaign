@@ -13,7 +13,7 @@ module.exports = {
         return { ...record[0].fields, id: record[0].id };
     },
 
-    async updateRecord(id) {
-        await table.update(id, { "In High Level": true });
+    async updateRecord(view, id) {
+        await table.update(id, { [view]: true });
     },
 };

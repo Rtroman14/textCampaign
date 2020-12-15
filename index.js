@@ -8,10 +8,19 @@ const textContact = async () => {
     try {
         const record = await getRecord();
         const contact = mapContact(record);
-        await highLevel(contact);
-        await updateRecord(record.id);
 
-        console.log("Texted", contact.name);
+        // add to highLevel / text contact
+        const texted = await highLevel(contact);
+
+        // if successful, update record
+        if (texted.status == "200") {
+            // update in airtable
+            await updateRecord("In High Level", record.id);
+            console.log("Texted", contact.name);
+        } else {
+            await updateRecord("Error", record.id);
+            console.log("Error texting", contact.name);
+        }
     } catch (error) {
         console.log("ERROR TEXTING CONTACT ---", error);
     }
