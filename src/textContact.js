@@ -15,12 +15,12 @@ module.exports = async (client) => {
             // update in airtable
             await updateRecord(client, "In High Level", record.id);
             console.log("Texted", contact.name);
+            return true;
         } else {
             await updateRecord(client, "Error", record.id);
             console.log("Error texting", contact.name);
+            return false;
         }
-
-        return true;
     } catch (error) {
         console.log("ERROR TEXTING CONTACT ---", error);
         return false;

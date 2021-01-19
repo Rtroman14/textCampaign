@@ -5,20 +5,29 @@ const { minutesWait } = require("./src/helpers");
 const numContacts = 50;
 
 (async () => {
-    const status = {
-        customInstallations: true,
-        priorityRoofing: true,
-        priorityRoofingBenton: true,
-    };
-
     try {
         for (let i = 0; i < numContacts; i++) {
-            if (status.customInstallations) {
+            if (users.customInstallations.status) {
                 const isSuccessful = await textContact(users.customInstallations);
                 isSuccessful
-                    ? (status.customInstallations = true)
-                    : (status.customInstallations = false);
+                    ? (users.customInstallations.status = true)
+                    : (users.customInstallations.status = false);
             }
+            if (users.priorityRoofing.status) {
+                const isSuccessful = await textContact(users.priorityRoofing);
+                isSuccessful
+                    ? (users.priorityRoofing.status = true)
+                    : (users.priorityRoofing.status = false);
+            }
+            if (users.priorityRoofingBenton.status) {
+                const isSuccessful = await textContact(users.priorityRoofingBenton);
+                isSuccessful
+                    ? (users.priorityRoofingBenton.status = true)
+                    : (users.priorityRoofingBenton.status = false);
+            }
+
+            // users.customInstallations.status && (await runCampaign(users.customInstallations));
+
             await minutesWait(3);
         }
     } catch (error) {
