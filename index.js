@@ -38,8 +38,6 @@ const numContacts = 50;
             //     isSuccessful ? (users.titan.status = true) : (users.titan.status = false);
             // }
 
-            // users.customInstallations.status && (await runCampaign(users.customInstallations));
-
             await minutesWait(3);
         }
     } catch (error) {
