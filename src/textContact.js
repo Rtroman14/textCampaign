@@ -8,7 +8,7 @@ module.exports = async (client) => {
         const contact = mapContact(record);
 
         // add to highLevel / text contact
-        const texted = await highLevel(client.HIGHLEVEL_TOKEN, contact);
+        const texted = await highLevel(client.highlevelKey, contact);
 
         // if successful, update record
         if (texted.status == "200") {
