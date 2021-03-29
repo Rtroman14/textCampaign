@@ -18,32 +18,54 @@ module.exports = class AirtableApi {
         }
     }
 
-    async getContacts() {
+    async getCampaigns() {
         try {
             const base = await this.assignAirtable("appGB7S9Wknu6MiQb");
 
             const res = await base("Campaigns").select({ view: "Text" }).firstPage();
 
-            const contacts = res.map((contact) => {
+            const campaigns = res.map((campaign) => {
                 return {
-                    ...contact.fields,
-                    recordID: contact.getId(),
+                    ...campaign.fields,
+                    recordID: campaign.getId(),
                 };
             });
 
-            return contacts;
+            return campaigns;
         } catch (error) {
-            console.log("ERROR GETCONTACTS() ---", error);
+            console.log("ERROR GETCAMPAIGNS() ---", error);
         }
     }
 
-    async updateContact(baseID, recordID, updatedFields) {
+    async updateCampaign(recordID, updatedFields) {
+        try {
+            const base = await this.assignAirtable("appGB7S9Wknu6MiQb");
+
+            await base("Campaigns").update(recordID, updatedFields);
+        } catch (error) {
+            console.log("ERROR UPDATECAMPAIGN() ---", error);
+        }
+    }
+
+    async getContact(baseID, baseName) {
         try {
             const base = await this.assignAirtable(baseID);
 
-            await base("First Line Ready").update(recordID, updatedFields);
+            const res = await base(baseName).select({ maxRecords: 1, view: "Text" }).firstPage();
+
+            return res.length > 0 ? res[0].fields : false;
         } catch (error) {
-            console.log("ERROR UPDATECONTACTS() ---", error);
+            console.log("ERROR GETCONTACT() ---", error);
+        }
+    }
+
+    async updateContact(baseID, baseName, recordID, updatedFields) {
+        try {
+            const base = await this.assignAirtable(baseID);
+
+            await base(baseName).update(recordID, updatedFields);
+        } catch (error) {
+            console.log("ERROR UPDATECONTACT() ---", error);
         }
     }
 };
