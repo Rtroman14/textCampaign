@@ -47,23 +47,23 @@ module.exports = class AirtableApi {
         }
     }
 
-    async getContact(baseID, baseName) {
+    async getContact(baseID, view) {
         try {
             const base = await this.assignAirtable(baseID);
 
-            const res = await base(baseName).select({ maxRecords: 1, view: "Text" }).firstPage();
+            const res = await base("First Line Ready").select({ maxRecords: 1, view }).firstPage();
 
-            return res.length > 0 ? res[0].fields : false;
+            return res.length > 0 ? { ...res[0].fields, recordID: res[0].getId() } : false;
         } catch (error) {
             console.log("ERROR GETCONTACT() ---", error);
         }
     }
 
-    async updateContact(baseID, baseName, recordID, updatedFields) {
+    async updateContact(baseID, recordID, updatedFields) {
         try {
             const base = await this.assignAirtable(baseID);
 
-            await base(baseName).update(recordID, updatedFields);
+            await base("First Line Ready").update(recordID, updatedFields);
         } catch (error) {
             console.log("ERROR UPDATECONTACT() ---", error);
         }

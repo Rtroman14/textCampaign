@@ -1,8 +1,8 @@
 const moment = require("moment");
 
 const AirtableApi = require("./src/airtable");
+const HighlevelApi = require("./src/Highlevel");
 const { filterCampaigns, mapContact, minutesWait } = require("./src/helpers");
-const highLevel = require("./src/highLevel");
 
 const Airtable = new AirtableApi("key2tZxeaXDfyBJ9k");
 
@@ -18,39 +18,37 @@ const numContacts = 50;
 
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
-                let baseName = "First Line Ready";
+                const Highlevel = new HighlevelApi(campaign["API Token"]);
+
+                let view = "Text";
 
                 if ("Tag" in campaign) {
-                    baseName = `First Line Ready - ${campaign.Tag}`;
+                    view = `Text - ${campaign.Tag}`;
                 }
 
-                const contact = await Airtable.getContact(campaign.baseID, baseName);
+                const contact = await Airtable.getContact(campaign["Base ID"], view);
 
                 if (contact) {
                     const highLevelContact = mapContact(contact);
 
                     try {
-                        const texted = await highLevel(campaign["Highlevel Key"], highLevelContact);
+                        const texted = await Highlevel.textContact(
+                            highLevelContact,
+                            campaign["Campaign ID"]
+                        );
 
                         if (texted.status == "200") {
-                            await Airtable.updateContact(
-                                campaign.baseID,
-                                baseName,
-                                campaign.recordID,
-                                {
-                                    Texted: true,
-                                    "In Campaign": true,
-                                    "Upload Date": today,
-                                    Campaign: campaign.Campaign,
-                                }
-                            );
+                            await Airtable.updateContact(campaign["Base ID"], contact.recordID, {
+                                "In Campaign": true,
+                                Campaign: campaign.Campaign,
+                            });
 
                             console.log(`${campaign.Client} texted: ${highLevelContact.name}`);
                         }
                     } catch (error) {
-                        await Airtable.updateContact(campaign.baseID, baseName, campaign.recordID, {
+                        // RUNS IF ERROR WHILE TEXTING
+                        await Airtable.updateContact(campaign["Base ID"], contact.recordID, {
                             Error: true,
-                            "Upload Date": today,
                         });
 
                         console.log(
@@ -63,7 +61,6 @@ const numContacts = 50;
                         (currentCampaign) => currentCampaign.Client !== campaign.Client
                     );
 
-                    // update campaign notes to say "Need to add contacts"
                     await Airtable.updateCampaign(campaign.recordID, {
                         "Campaign Status": "Need More Contacts",
                         "Last Updated": today,
@@ -73,6 +70,11 @@ const numContacts = 50;
 
             await minutesWait(2);
         }
+
+        // run at the end of loop
+        await Airtable.updateCampaign(campaign.recordID, {
+            "Last Updated": today,
+        });
     } catch (error) {
         console.log(error);
     }

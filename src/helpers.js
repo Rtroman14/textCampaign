@@ -1,6 +1,3 @@
-const textContact = require("./textContact");
-const users = require("../config/keys");
-
 module.exports = {
     async minutesWait(minutes) {
         return await new Promise((resolve) => {
@@ -29,14 +26,6 @@ module.exports = {
             city: contact.City || "",
             state: contact.State || "",
             postalCode: contact["Zip Code"] || "",
-            tags: contact.Tag,
         };
-    },
-
-    async runCampaign(client) {
-        if (users[client].status) {
-            const isCampaignSuccessful = await textContact(users[client]);
-            users[client].status = isCampaignSuccessful;
-        }
     },
 };

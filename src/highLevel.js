@@ -1,14 +1,76 @@
+require("dotenv").config();
+
 const axios = require("axios");
 
-module.exports = async (token, data) => {
-    const config = {
-        method: "post",
-        url: "https://rest.gohighlevel.com/v1/contacts/",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-        data,
-    };
+module.exports = class Highlevel {
+    constructor(token) {
+        this.token = token;
+    }
 
-    return await axios(config);
+    getConfig(method, url, data) {
+        try {
+            if (data) {
+                return {
+                    method,
+                    url,
+                    headers: {
+                        Authorization: `Bearer ${this.token}`,
+                    },
+                    data,
+                };
+            }
+            return {
+                method,
+                url,
+                headers: {
+                    Authorization: `Bearer ${this.token}`,
+                },
+            };
+        } catch (error) {
+            console.log("ERROR CONFIG ---", error);
+        }
+    }
+
+    async createContact(data) {
+        try {
+            const config = this.getConfig(
+                "post",
+                "https://rest.gohighlevel.com/v1/contacts/",
+                data
+            );
+
+            const res = await axios(config);
+
+            return res.data.contact;
+        } catch (error) {
+            console.log("ERROR CREATECONTACT ---", error);
+        }
+    }
+
+    async addToCampaign(contactID, campaignID) {
+        try {
+            const config = this.getConfig(
+                "post",
+                `https://rest.gohighlevel.com/v1/contacts/${contactID}/campaigns/${campaignID}`,
+                data
+            );
+
+            const res = await axios(config);
+            return res;
+        } catch (error) {
+            console.log("ERROR ADDTOCAMPAIGN ---", error);
+        }
+    }
+
+    async textContact(contactData, campaignID) {
+        try {
+            const contact = await this.createContact(contactData);
+
+            const res = await this.addToCampaign(contact.id, campaignID);
+
+            return res;
+        } catch (error) {
+            console.log("ERROR TEXTCONTACT ---", error);
+        }
+    }
 };
