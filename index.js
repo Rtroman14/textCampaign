@@ -1,10 +1,12 @@
+require("dotenv").config();
+
 const moment = require("moment");
 
 const AirtableApi = require("./src/airtable");
 const HighlevelApi = require("./src/Highlevel");
 const { filterCampaigns, mapContact, minutesWait } = require("./src/helpers");
 
-const Airtable = new AirtableApi("key2tZxeaXDfyBJ9k");
+const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
 const today = moment(new Date()).format("MM/DD/YYYY");
 

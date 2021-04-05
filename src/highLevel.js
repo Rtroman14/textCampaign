@@ -51,8 +51,7 @@ module.exports = class Highlevel {
         try {
             const config = this.getConfig(
                 "post",
-                `https://rest.gohighlevel.com/v1/contacts/${contactID}/campaigns/${campaignID}`,
-                data
+                `https://rest.gohighlevel.com/v1/contacts/${contactID}/campaigns/${campaignID}`
             );
 
             const res = await axios(config);

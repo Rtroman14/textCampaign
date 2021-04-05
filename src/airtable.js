@@ -1,5 +1,4 @@
 const Airtable = require("airtable");
-const moment = require("moment");
 
 module.exports = class AirtableApi {
     constructor(apiKey) {
