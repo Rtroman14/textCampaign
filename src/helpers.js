@@ -5,7 +5,7 @@ module.exports = {
         });
     },
 
-    filterCampaigns(campaigns) {
+    liveCampaigns(campaigns) {
         return campaigns.filter((campaign) => {
             if ("Campaign Status" in campaign) {
                 if (campaign["Campaign Status"] === "Live") {
@@ -13,6 +13,51 @@ module.exports = {
                 }
             }
         });
+    },
+
+    campaignsToRun(campaigns) {
+        let textCampaigns = [];
+
+        campaigns.forEach((campaign) => {
+            // check if client is in textCampaigns
+            const isClientPresent = textCampaigns.some(
+                (newCampaign) => newCampaign.client === campaign.client
+            );
+
+            if ("type" in campaign && campaign.type === "Specific") {
+                return textCampaigns.push(campaign);
+            }
+
+            // check if multiple same clients exist in campaigns
+            const clientCampaigns = campaigns.filter((obj) => {
+                if (!("type" in obj)) {
+                    return obj.client === campaign.client;
+                }
+            });
+
+            if (clientCampaigns.length > 1 && !isClientPresent) {
+                let clientAdded = false;
+
+                clientCampaigns.some((obj) => {
+                    if (!("Last Updated" in obj)) {
+                        clientAdded = true;
+                        return textCampaigns.push(obj);
+                    }
+                });
+
+                const [nextCampaign] = clientCampaigns.sort(
+                    (a, b) => new Date(a["Last Updated"]) - new Date(b["Last Updated"])
+                );
+
+                !clientAdded && textCampaigns.push(nextCampaign);
+            }
+
+            if (clientCampaigns.length === 1) {
+                textCampaigns.push(campaign);
+            }
+        });
+
+        return textCampaigns;
     },
 
     mapContact(contact) {
