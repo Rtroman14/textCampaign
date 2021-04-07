@@ -82,7 +82,7 @@ const numContacts = 50;
                 "Last Updated": today,
             });
 
-            await minutesWait(0.1);
+            await minutesWait(0.05);
         }
     } catch (error) {
         console.log(error);
