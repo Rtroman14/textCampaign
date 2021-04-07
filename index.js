@@ -4,7 +4,7 @@ const moment = require("moment");
 
 const AirtableApi = require("./src/airtable");
 const HighlevelApi = require("./src/Highlevel");
-const { liveCampaigns, mapContact, minutesWait } = require("./src/helpers");
+const { liveCampaigns, mapContact, minutesWait, campaignsToRun } = require("./src/helpers");
 
 const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
@@ -17,6 +17,8 @@ const numContacts = 50;
         const getCampaigns = await Airtable.getCampaigns();
 
         let campaigns = liveCampaigns(getCampaigns);
+
+        campaigns = campaignsToRun(campaigns);
 
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
@@ -70,13 +72,18 @@ const numContacts = 50;
                 }
             }
 
+            console.log(`\n --- Texts sent: ${i + 1} --- \n`);
             await minutesWait(2);
         }
 
-        // run at the end of loop
-        await Airtable.updateCampaign(campaign.recordID, {
-            "Last Updated": today,
-        });
+        for (let campaign of campaigns) {
+            // run at the end of loop
+            await Airtable.updateCampaign(campaign.recordID, {
+                "Last Updated": today,
+            });
+
+            await minutesWait(0.1);
+        }
     } catch (error) {
         console.log(error);
     }

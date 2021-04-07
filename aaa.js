@@ -2,14 +2,14 @@ const { campaignsToRun } = require("./src/helpers");
 
 // get campaigns
 let campaigns = [
-    { client: "Hornet", "Last Updated": "4/6/2021", type: "Specific" },
-    { client: "Hornet", "Last Updated": "4/6/2021", type: "Specific" },
-    { client: "Farha", "Last Updated": "4/6/2021" },
-    { client: "Farha", "Last Updated": "4/4/2021" },
-    { client: "Integrity", "Last Updated": "4/6/2021" },
-    { client: "Just Roofs", "Last Updated": "4/6/2021" },
-    { client: "Just Roofs" },
-    { client: "New Age", "Last Updated": "4/6/2021" },
+    { Client: "Hornet", "Last Updated": "4/6/2021", Type: "Specific" },
+    { Client: "Hornet", "Last Updated": "4/6/2021", Type: "Specific" },
+    { Client: "Farha", "Last Updated": "4/6/2021" },
+    { Client: "Farha", "Last Updated": "4/4/2021" },
+    { Client: "Integrity", "Last Updated": "4/6/2021" },
+    { Client: "Just Roofs", "Last Updated": "4/6/2021" },
+    { Client: "Just Roofs" },
+    { Client: "New Age", "Last Updated": "4/6/2021" },
 ];
 
 const test = campaignsToRun(campaigns);

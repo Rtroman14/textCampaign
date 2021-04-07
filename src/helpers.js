@@ -7,7 +7,7 @@ module.exports = {
 
     liveCampaigns(campaigns) {
         return campaigns.filter((campaign) => {
-            if ("Campaign Status" in campaign) {
+            if ("Campaign Status" in campaign && "Campaign ID" in campaign) {
                 if (campaign["Campaign Status"] === "Live") {
                     return campaign;
                 }
@@ -21,17 +21,17 @@ module.exports = {
         campaigns.forEach((campaign) => {
             // check if client is in textCampaigns
             const isClientPresent = textCampaigns.some(
-                (newCampaign) => newCampaign.client === campaign.client
+                (newCampaign) => newCampaign.Client === campaign.Client
             );
 
-            if ("type" in campaign && campaign.type === "Specific") {
+            if ("Type" in campaign && campaign.Type === "Specific") {
                 return textCampaigns.push(campaign);
             }
 
             // check if multiple same clients exist in campaigns
             const clientCampaigns = campaigns.filter((obj) => {
-                if (!("type" in obj)) {
-                    return obj.client === campaign.client;
+                if (!("Type" in obj)) {
+                    return obj.Client === campaign.Client;
                 }
             });
 
