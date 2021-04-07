@@ -1,20 +1,70 @@
-require("dotenv").config();
-
 const Airtable = require("airtable");
 
-const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base("appc1d7xJdOe2bCnD");
+module.exports = class AirtableApi {
+    constructor(apiKey) {
+        if (!apiKey) {
+            throw new Error("Using Airtable requires an API key.");
+        }
 
-module.exports = {
-    async getRecord(client) {
-        const table = base(client.baseName);
+        this.apiKey = apiKey;
+    }
 
-        const record = await table.select({ maxRecords: 1, view: "Add To HighLevel" }).firstPage();
-        return { ...record[0].fields, id: record[0].id };
-    },
+    async assignAirtable(baseID) {
+        try {
+            return new Airtable({ apiKey: this.apiKey }).base(baseID);
+        } catch (error) {
+            console.log("NO API KEY PROVIDED ---", error);
+        }
+    }
 
-    async updateRecord(client, view, id) {
-        const table = base(client.baseName);
+    async getCampaigns() {
+        try {
+            const base = await this.assignAirtable("appGB7S9Wknu6MiQb");
 
-        await table.update(id, { [view]: true });
-    },
+            const res = await base("Campaigns").select({ view: "Text" }).firstPage();
+
+            const campaigns = res.map((campaign) => {
+                return {
+                    ...campaign.fields,
+                    recordID: campaign.getId(),
+                };
+            });
+
+            return campaigns;
+        } catch (error) {
+            console.log("ERROR GETCAMPAIGNS() ---", error);
+        }
+    }
+
+    async updateCampaign(recordID, updatedFields) {
+        try {
+            const base = await this.assignAirtable("appGB7S9Wknu6MiQb");
+
+            await base("Campaigns").update(recordID, updatedFields);
+        } catch (error) {
+            console.log("ERROR UPDATECAMPAIGN() ---", error);
+        }
+    }
+
+    async getContact(baseID, view) {
+        try {
+            const base = await this.assignAirtable(baseID);
+
+            const res = await base("First Line Ready").select({ maxRecords: 1, view }).firstPage();
+
+            return res.length > 0 ? { ...res[0].fields, recordID: res[0].getId() } : false;
+        } catch (error) {
+            console.log("ERROR GETCONTACT() ---", error);
+        }
+    }
+
+    async updateContact(baseID, recordID, updatedFields) {
+        try {
+            const base = await this.assignAirtable(baseID);
+
+            await base("First Line Ready").update(recordID, updatedFields);
+        } catch (error) {
+            console.log("ERROR UPDATECONTACT() ---", error);
+        }
+    }
 };

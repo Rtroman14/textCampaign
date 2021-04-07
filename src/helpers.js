@@ -1,6 +1,3 @@
-const textContact = require("./textContact");
-const users = require("../config/keys");
-
 module.exports = {
     async minutesWait(minutes) {
         return await new Promise((resolve) => {
@@ -8,25 +5,72 @@ module.exports = {
         });
     },
 
+    liveCampaigns(campaigns) {
+        return campaigns.filter((campaign) => {
+            if ("Campaign Status" in campaign && "Campaign ID" in campaign) {
+                if (campaign["Campaign Status"] === "Live") {
+                    return campaign;
+                }
+            }
+        });
+    },
+
+    campaignsToRun(campaigns) {
+        let textCampaigns = [];
+
+        campaigns.forEach((campaign) => {
+            // check if client is in textCampaigns
+            const isClientPresent = textCampaigns.some(
+                (newCampaign) => newCampaign.Client === campaign.Client
+            );
+
+            if ("Type" in campaign && campaign.Type === "Specific") {
+                return textCampaigns.push(campaign);
+            }
+
+            // check if multiple same clients exist in campaigns
+            const clientCampaigns = campaigns.filter((obj) => {
+                if (!("Type" in obj)) {
+                    return obj.Client === campaign.Client;
+                }
+            });
+
+            if (clientCampaigns.length > 1 && !isClientPresent) {
+                let clientAdded = false;
+
+                clientCampaigns.some((obj) => {
+                    if (!("Last Updated" in obj)) {
+                        clientAdded = true;
+                        return textCampaigns.push(obj);
+                    }
+                });
+
+                const [nextCampaign] = clientCampaigns.sort(
+                    (a, b) => new Date(a["Last Updated"]) - new Date(b["Last Updated"])
+                );
+
+                !clientAdded && textCampaigns.push(nextCampaign);
+            }
+
+            if (clientCampaigns.length === 1) {
+                textCampaigns.push(campaign);
+            }
+        });
+
+        return textCampaigns;
+    },
+
     mapContact(contact) {
         return {
-            firstName: contact["First Name"],
-            lastName: contact["Last Name"],
+            firstName: contact["First Name"] || "",
+            lastName: contact["Last Name"] || "",
             name: `${contact["First Name"]} ${contact["Last Name"]}`,
             email: contact.Email || "",
-            phone: contact["Cell Phone"] || "",
+            phone: contact["Phone Number"] || "",
             address1: contact.Address || "",
             city: contact.City || "",
             state: contact.State || "",
             postalCode: contact["Zip Code"] || "",
-            tags: contact.Tag,
         };
-    },
-
-    async runCampaign(client) {
-        if (users[client].status) {
-            const isCampaignSuccessful = await textContact(users[client]);
-            users[client].status = isCampaignSuccessful;
-        }
     },
 };
