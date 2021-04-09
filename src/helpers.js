@@ -7,7 +7,12 @@ module.exports = {
 
     liveCampaigns(campaigns) {
         return campaigns.filter((campaign) => {
-            if ("Campaign Status" in campaign && "Campaign ID" in campaign) {
+            if (
+                "Campaign Status" in campaign &&
+                "Base ID" in campaign &&
+                "API Token" in campaign &&
+                "Campaign ID" in campaign
+            ) {
                 if (campaign["Campaign Status"] === "Live") {
                     return campaign;
                 }
