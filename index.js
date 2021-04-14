@@ -15,9 +15,8 @@ const numContacts = 50;
 (async () => {
     try {
         const getCampaigns = await Airtable.getCampaigns();
-
         let campaigns = liveCampaigns(getCampaigns);
-
+        campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
         for (let i = 0; i < numContacts; i++) {

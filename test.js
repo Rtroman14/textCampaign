@@ -5,15 +5,14 @@ const HighlevelApi = require("./src/Highlevel");
 
 const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
-const { mapContact, liveCampaigns, campaignsToRun } = require("./src/helpers");
+const { campaignsDueToday, liveCampaigns, campaignsToRun } = require("./src/helpers");
 
 (async () => {
     try {
         const getCampaigns = await Airtable.getCampaigns();
-
         let campaigns = liveCampaigns(getCampaigns);
-
-        // campaigns = campaignsToRun(campaigns);
+        campaigns = campaignsDueToday(campaigns);
+        campaigns = campaignsToRun(campaigns);
 
         console.log(campaigns);
     } catch (error) {
