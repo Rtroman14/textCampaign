@@ -1,3 +1,6 @@
+const moment = require("moment");
+const today = moment(new Date()).format("YYYY-MM-DD");
+
 module.exports = {
     async minutesWait(minutes) {
         return await new Promise((resolve) => {
@@ -16,6 +19,18 @@ module.exports = {
                 if (campaign["Campaign Status"] === "Live") {
                     return campaign;
                 }
+            }
+        });
+    },
+
+    campaignsDueToday(campaigns) {
+        return campaigns.filter((campaign) => {
+            if (!("Last Updated" in campaign)) {
+                return campaign;
+            }
+
+            if ("Last Updated" in campaign && moment(campaign["Last Updated"]).isBefore(today)) {
+                return campaign;
             }
         });
     },
