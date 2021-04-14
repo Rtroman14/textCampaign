@@ -58,6 +58,25 @@ module.exports = class AirtableApi {
         }
     }
 
+    async getContacts(baseID, view) {
+        try {
+            const base = await this.assignAirtable(baseID);
+
+            const res = await base("First Line Ready").select({ view }).firstPage();
+
+            const contacts = res.map((contact) => {
+                return {
+                    ...contact.fields,
+                    recordID: contact.getId(),
+                };
+            });
+
+            return contacts;
+        } catch (error) {
+            console.log("ERROR GETCAMPAIGNS() ---", error);
+        }
+    }
+
     async updateContact(baseID, recordID, updatedFields) {
         try {
             const base = await this.assignAirtable(baseID);

@@ -5,6 +5,7 @@ const moment = require("moment");
 const AirtableApi = require("./src/airtable");
 const HighlevelApi = require("./src/Highlevel");
 const { liveCampaigns, mapContact, minutesWait, campaignsToRun } = require("./src/helpers");
+const slackNotification = require("./src/slackNotification");
 
 const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
@@ -70,6 +71,15 @@ const numContacts = 50;
                         "Campaign Status": "Need More Contacts",
                         "Last Updated": today,
                     });
+                }
+
+                if (numContacts === 49) {
+                    const contacts = await Airtable.getContacts(campaign["Base ID"], view);
+
+                    contacts.length < 100 &&
+                        (await slackNotification(
+                            `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
+                        ));
                 }
             }
 

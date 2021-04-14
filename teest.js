@@ -1,9 +1,23 @@
-const { minutesWait } = require("./src/helpers");
+require("dotenv").config();
+
+const AirtableApi = require("./src/airtable");
+const HighlevelApi = require("./src/Highlevel");
+const slackNotification = require("./src/slackNotification");
+
+const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
+
+const { campaignsDueToday, liveCampaigns, campaignsToRun } = require("./src/helpers");
 
 (async () => {
-    for (let i = 0; i < 5; i++) {
-        console.log("Run");
-
-        await minutesWait(0.1);
+    try {
+        // const getCampaigns = await Airtable.getCampaigns();
+        // let campaigns = liveCampaigns(getCampaigns);
+        // campaigns = campaignsDueToday(campaigns);
+        // campaigns = campaignsToRun(campaigns);
+        // console.log(campaigns);
+        // const contacts = await Airtable.getContacts("appAJd8DNpOfsXN53", "Text - nick");
+        // console.log(contacts.length);
+    } catch (error) {
+        console.log(error.message);
     }
 })();
