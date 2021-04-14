@@ -47,7 +47,9 @@ const numContacts = 50;
                                 Campaign: campaign.Campaign,
                             });
 
-                            console.log(`${campaign.Client} texted: ${highLevelContact.name}`);
+                            console.log(
+                                `Client: ${campaign.Client} | Campaign: ${campaign.Campaign} | texted: ${highLevelContact.name}`
+                            );
                         }
                     } catch (error) {
                         // RUNS IF ERROR WHILE TEXTING
