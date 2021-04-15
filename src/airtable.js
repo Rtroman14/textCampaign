@@ -86,4 +86,25 @@ module.exports = class AirtableApi {
             console.log("ERROR UPDATECONTACT() ---", error);
         }
     }
+
+    async findBy(baseID) {
+        try {
+            const base = await this.assignAirtable(baseID);
+
+            const res = await base("First Line Ready")
+                .select({
+                    filterByFormula: `({Email} = "elon7489@elonmgmt.com")`,
+                })
+                .firstPage();
+
+            const contacts = res.map((contact) => ({
+                ...contact.fields,
+                recordID: contact.getId(),
+            }));
+
+            return contacts.length > 0 ? contacts : false;
+        } catch (error) {
+            console.log("ERROR GETCONTACTS() ---", error);
+        }
+    }
 };

@@ -2,7 +2,6 @@ require("dotenv").config();
 
 const AirtableApi = require("./src/airtable");
 const HighlevelApi = require("./src/Highlevel");
-const slackNotification = require("./src/slackNotification");
 
 const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
@@ -16,8 +15,9 @@ const { campaignsDueToday, liveCampaigns, campaignsToRun } = require("./src/help
         // campaigns = campaignsToRun(campaigns);
         // console.log(campaigns);
 
-        const contacts = await Airtable.getContacts("appjxmBfr90miizyO", "Text");
-        console.log(contacts.length);
+        const contactID = await Airtable.findBy("apps7T6bpqSy7XOfa");
+
+        console.log(contactID);
     } catch (error) {
         console.log(error.message);
     }
