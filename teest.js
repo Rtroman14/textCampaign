@@ -15,8 +15,9 @@ const { campaignsDueToday, liveCampaigns, campaignsToRun } = require("./src/help
         // campaigns = campaignsDueToday(campaigns);
         // campaigns = campaignsToRun(campaigns);
         // console.log(campaigns);
-        // const contacts = await Airtable.getContacts("appAJd8DNpOfsXN53", "Text - nick");
-        // console.log(contacts.length);
+
+        const contacts = await Airtable.getContacts("appjxmBfr90miizyO", "Text");
+        console.log(contacts.length);
     } catch (error) {
         console.log(error.message);
     }
