@@ -18,6 +18,7 @@ const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 const today = moment(new Date()).format("MM/DD/YYYY");
 
 const numContacts = 50;
+const checkContacts = numContacts - 1;
 
 (async () => {
     try {
@@ -83,7 +84,7 @@ const numContacts = 50;
                     });
                 }
 
-                if (numContacts === 49) {
+                if (numContacts === checkContacts) {
                     const contacts = await Airtable.getContacts(campaign["Base ID"], view);
 
                     if (contacts.length < 100) {
