@@ -27,9 +27,7 @@ const numContacts = 50;
         campaigns = campaignsToRun(campaigns);
 
         // campaigns = campaigns.filter(
-        //     (campaign) =>
-        //         campaign.Client === "All Area Roofing & Construction" ||
-        //         campaign.Client === "New Age Roofing"
+        //     (campaign) => campaign.Client === "Guardian Construction Group"
         // );
 
         for (let i = 0; i < numContacts; i++) {
