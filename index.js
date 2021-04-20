@@ -29,6 +29,8 @@ const checkContacts = numContacts - 1;
 
         // campaigns = campaigns.filter((campaign) => campaign.Client === "Farha Roofing");
 
+        // IMPORTANT !!! - SEND 86 TEXTS FOR INTEGRITY
+
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
                 const Highlevel = new HighlevelApi(campaign["API Token"]);
