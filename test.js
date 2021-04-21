@@ -7,28 +7,34 @@ const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
 const { campaignsDueToday, liveCampaigns, campaignsToRun } = require("./src/helpers");
 
+const slackNotification = require("./src/slackNotification");
+
 (async () => {
     try {
-        // const getCampaigns = await Airtable.getCampaigns();
-        // let campaigns = liveCampaigns(getCampaigns);
+        const getCampaigns = await Airtable.getCampaigns();
+        let campaigns = liveCampaigns(getCampaigns);
         // campaigns = campaignsDueToday(campaigns);
         // campaigns = campaignsToRun(campaigns);
 
         // console.log(campaigns);
 
-        //
-        const contacts = await Airtable.getContacts("appLVlpoe7RYAQfm9", "Text - denver");
+        for (let campaign of campaigns) {
+            let view = "Text";
 
-        console.log(contacts.length);
+            if ("Tag" in campaign) {
+                view = `Text - ${campaign.Tag}`;
+            }
 
-        if (contacts.length < 100) {
-            // await slackNotification(
-            //     `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
-            // );
+            const contacts = await Airtable.getContacts(campaign["Base ID"], view);
+            if (contacts.length < 100) {
+                await slackNotification(
+                    `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
+                );
 
-            console.log(
-                `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
-            );
+                console.log(
+                    `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
+                );
+            }
         }
     } catch (error) {
         console.log(error.message);

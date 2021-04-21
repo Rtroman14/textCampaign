@@ -17,8 +17,8 @@ const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
 const today = moment(new Date()).format("MM/DD/YYYY");
 
-const numContacts = 50;
-const checkContacts = numContacts - 1;
+// const numContacts = 50;
+const numContacts = 86;
 
 (async () => {
     try {
@@ -27,7 +27,7 @@ const checkContacts = numContacts - 1;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        // campaigns = campaigns.filter((campaign) => campaign.Client === "Farha Roofing");
+        campaigns = campaigns.filter((campaign) => campaign.Client === "Integrity Pro Roofing");
 
         // IMPORTANT !!! - SEND 86 TEXTS FOR INTEGRITY
 
@@ -84,7 +84,7 @@ const checkContacts = numContacts - 1;
                     });
                 }
 
-                if (numContacts === checkContacts) {
+                if (i === numContacts - 1) {
                     const contacts = await Airtable.getContacts(campaign["Base ID"], view);
 
                     if (contacts.length < 100) {
