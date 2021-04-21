@@ -27,9 +27,9 @@ const checkContacts = numContacts - 1;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        // campaigns = campaigns.filter(
-        //     (campaign) => campaign.Client === "Guardian Construction Group"
-        // );
+        // campaigns = campaigns.filter((campaign) => campaign.Client === "Farha Roofing");
+
+        // IMPORTANT !!! - SEND 86 TEXTS FOR INTEGRITY
 
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
@@ -88,6 +88,9 @@ const checkContacts = numContacts - 1;
                     const contacts = await Airtable.getContacts(campaign["Base ID"], view);
 
                     if (contacts.length < 100) {
+                        console.log(
+                            `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
+                        );
                         await slackNotification(
                             `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
                         );
