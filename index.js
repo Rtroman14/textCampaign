@@ -17,8 +17,7 @@ const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
 const today = moment(new Date()).format("MM/DD/YYYY");
 
-// const numContacts = 50;
-const numContacts = 86;
+const numContacts = 50;
 
 (async () => {
     try {
@@ -27,9 +26,7 @@ const numContacts = 86;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        campaigns = campaigns.filter((campaign) => campaign.Client === "Integrity Pro Roofing");
-
-        // IMPORTANT !!! - SEND 86 TEXTS FOR INTEGRITY
+        // campaigns = campaigns.filter((campaign) => campaign.Client === "Integrity Pro Roofing");
 
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
@@ -88,11 +85,8 @@ const numContacts = 86;
                     const contacts = await Airtable.getContacts(campaign["Base ID"], view);
 
                     if (contacts.length < 100) {
-                        console.log(
-                            `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
-                        );
                         await slackNotification(
-                            `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
+                            `*${campaign.Client}'s* campaign: ${campaign.Campaign} has *${contacts.length} contacts* remaining.`
                         );
                     }
                 }
