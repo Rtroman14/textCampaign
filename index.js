@@ -79,6 +79,10 @@ const numContacts = 50;
                         "Campaign Status": "Need More Contacts",
                         "Last Updated": today,
                     });
+
+                    await slackNotification(
+                        `\n*Client:* ${campaign.Client}\n*Campaign:* ${campaign.Campaign} \n*Number of contacts:* 0\n`
+                    );
                 }
 
                 if (i === numContacts - 1) {
@@ -86,7 +90,7 @@ const numContacts = 50;
 
                     if (contacts.length < 100) {
                         await slackNotification(
-                            `*${campaign.Client}'s* campaign: ${campaign.Campaign} has *${contacts.length} contacts* remaining.`
+                            `\n*Client:* ${campaign.Client}\n*Campaign:* ${campaign.Campaign} \n*Number of contacts:* ${contacts.length}\n`
                         );
                     }
                 }
