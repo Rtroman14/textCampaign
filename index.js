@@ -26,7 +26,7 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        // campaigns = campaigns.filter((campaign) => campaign.Client === "MK Roofing");
+        campaigns = campaigns.filter((campaign) => campaign.Client === "Greenscape");
 
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {

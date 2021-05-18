@@ -16,7 +16,10 @@ module.exports = {
                 "API Token" in campaign &&
                 "Campaign ID" in campaign
             ) {
-                if (campaign["Campaign Status"] !== "Paused") {
+                if (
+                    campaign["Campaign Status"] !== "Paused" ||
+                    campaign["Campaign Status"] !== "Need To Launch"
+                ) {
                     return campaign;
                 }
             }
