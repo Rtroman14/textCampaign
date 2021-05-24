@@ -72,7 +72,7 @@ const numContacts = 50;
                 } else {
                     // remove campaign from list
                     campaigns = campaigns.filter(
-                        (currentCampaign) => currentCampaign.Client !== campaign.Client
+                        (currentCampaign) => currentCampaign.Campaign !== campaign.Campaign
                     );
 
                     await Airtable.updateCampaign(campaign.recordID, {
