@@ -26,7 +26,7 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        campaigns = campaigns.filter((campaign) => campaign.Client === "Summa Media");
+        // campaigns = campaigns.filter((campaign) => campaign.Client === "Summa Media");
 
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
@@ -72,7 +72,7 @@ const numContacts = 50;
                 } else {
                     // remove campaign from list
                     campaigns = campaigns.filter(
-                        (currentCampaign) => currentCampaign.Client !== campaign.Client
+                        (currentCampaign) => currentCampaign.Campaign !== campaign.Campaign
                     );
 
                     await Airtable.updateCampaign(campaign.recordID, {

@@ -13,8 +13,8 @@ const slackNotification = require("./src/slackNotification");
     try {
         const getCampaigns = await Airtable.getCampaigns();
         let campaigns = liveCampaigns(getCampaigns);
-        // campaigns = campaignsDueToday(campaigns);
-        // campaigns = campaignsToRun(campaigns);
+        campaigns = campaignsDueToday(campaigns);
+        campaigns = campaignsToRun(campaigns);
 
         // console.log(campaigns);
 
@@ -25,16 +25,18 @@ const slackNotification = require("./src/slackNotification");
                 view = `Text - ${campaign.Tag}`;
             }
 
-            const contacts = await Airtable.getContacts(campaign["Base ID"], view);
-            if (contacts.length < 100) {
-                await slackNotification(
-                    `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
-                );
+            console.log(campaign);
 
-                console.log(
-                    `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
-                );
-            }
+            // const contacts = await Airtable.getContacts(campaign["Base ID"], view);
+            // if (contacts.length < 100) {
+            //     await slackNotification(
+            //         `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
+            //     );
+
+            //     console.log(
+            //         `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
+            //     );
+            // }
         }
     } catch (error) {
         console.log(error.message);
