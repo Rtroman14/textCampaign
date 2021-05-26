@@ -9,6 +9,9 @@ const { campaignsDueToday, liveCampaigns, campaignsToRun } = require("./src/help
 
 const slackNotification = require("./src/slackNotification");
 
+const moment = require("moment");
+const today = moment(new Date()).format("MM/DD/YYYY");
+
 (async () => {
     try {
         const getCampaigns = await Airtable.getCampaigns();
@@ -16,7 +19,7 @@ const slackNotification = require("./src/slackNotification");
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        // console.log(campaigns);
+        campaigns = campaigns.filter((campaign) => campaign.Client === "Summa Media");
 
         for (let campaign of campaigns) {
             let view = "Text";
@@ -25,18 +28,9 @@ const slackNotification = require("./src/slackNotification");
                 view = `Text - ${campaign.Tag}`;
             }
 
-            console.log(campaign);
-
-            // const contacts = await Airtable.getContacts(campaign["Base ID"], view);
-            // if (contacts.length < 100) {
-            //     await slackNotification(
-            //         `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
-            //     );
-
-            //     console.log(
-            //         `${campaign.Client}'s campaign: ${campaign.Campaign} has ${contacts.length} contacts remaining.`
-            //     );
-            // }
+            await Airtable.updateCampaign(campaign.recordID, {
+                "Last Updated": today,
+            });
         }
     } catch (error) {
         console.log(error.message);

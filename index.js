@@ -59,6 +59,15 @@ const numContacts = 50;
                                 `Client: ${campaign.Client} | Campaign: ${campaign.Campaign} | texted: ${highLevelContact.name}`
                             );
                         }
+
+                        if (
+                            numContacts === 1 &&
+                            campaign["Campaign Status"] === "Need More Contacts"
+                        ) {
+                            await Airtable.updateCampaign(campaign.recordID, {
+                                "Campaign Status": "Live",
+                            });
+                        }
                     } catch (error) {
                         // RUNS IF ERROR WHILE TEXTING
                         await Airtable.updateContact(campaign["Base ID"], contact.recordID, {
