@@ -26,7 +26,7 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        campaigns = campaigns.filter((campaign) => campaign.Client === "Summa Media");
+        // campaigns = campaigns.filter((campaign) => campaign.Client === "Summa Media");
 
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
@@ -84,10 +84,16 @@ const numContacts = 50;
                         (currentCampaign) => currentCampaign.Campaign !== campaign.Campaign
                     );
 
-                    await Airtable.updateCampaign(campaign.recordID, {
-                        "Campaign Status": "Need More Contacts",
-                        "Last Updated": today,
-                    });
+                    if (numContacts > 10) {
+                        await Airtable.updateCampaign(campaign.recordID, {
+                            "Campaign Status": "Need More Contacts",
+                            "Last Updated": today,
+                        });
+                    } else {
+                        await Airtable.updateCampaign(campaign.recordID, {
+                            "Campaign Status": "Need More Contacts",
+                        });
+                    }
 
                     await slackNotification(
                         `\n*Client:* ${campaign.Client}\n*Campaign:* ${campaign.Campaign} \n*Number of contacts:* 0\n`
