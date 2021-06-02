@@ -19,19 +19,7 @@ const today = moment(new Date()).format("MM/DD/YYYY");
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        campaigns = campaigns.filter((campaign) => campaign.Client === "Summa Media");
-
-        for (let campaign of campaigns) {
-            let view = "Text";
-
-            if ("Tag" in campaign) {
-                view = `Text - ${campaign.Tag}`;
-            }
-
-            await Airtable.updateCampaign(campaign.recordID, {
-                "Last Updated": today,
-            });
-        }
+        console.log(campaigns);
     } catch (error) {
         console.log(error.message);
     }

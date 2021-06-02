@@ -17,8 +17,8 @@ module.exports = {
                 "Campaign ID" in campaign
             ) {
                 if (
-                    campaign["Campaign Status"] !== "Paused" ||
-                    campaign["Campaign Status"] !== "Need To Launch"
+                    campaign["Campaign Status"] === "Live" ||
+                    campaign["Campaign Status"] === "Need More Contacts"
                 ) {
                     return campaign;
                 }
