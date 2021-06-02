@@ -16,10 +16,15 @@ const today = moment(new Date()).format("MM/DD/YYYY");
     try {
         const getCampaigns = await Airtable.getCampaigns();
         let campaigns = liveCampaigns(getCampaigns);
-        campaigns = campaignsDueToday(campaigns);
-        campaigns = campaignsToRun(campaigns);
+        // campaigns = campaignsDueToday(campaigns);
+        // campaigns = campaignsToRun(campaigns);
 
         console.log(campaigns);
+<<<<<<< HEAD
+=======
+
+        console.log(campaigns);
+>>>>>>> 2268259af298e1556334ee577a8aafc91a8db6f7
     } catch (error) {
         console.log(error.message);
     }
