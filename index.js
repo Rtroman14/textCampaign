@@ -26,7 +26,7 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        campaigns = campaigns.filter((campaign) => campaign.Client === "Summa Media");
+        // campaigns = campaigns.filter((campaign) => campaign.Client === "Summa Media");
 
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
@@ -117,9 +117,17 @@ const numContacts = 50;
 
         for (let campaign of campaigns) {
             // run at the end of loop
-            await Airtable.updateCampaign(campaign.recordID, {
-                "Last Updated": today,
-            });
+
+            if (campaign["Campaign Status"] === "Need More Contacts)") {
+                await Airtable.updateCampaign(campaign.recordID, {
+                    "Last Updated": today,
+                    "Campaign Status": "Live",
+                });
+            } else {
+                await Airtable.updateCampaign(campaign.recordID, {
+                    "Last Updated": today,
+                });
+            }
 
             await minutesWait(0.05);
         }
