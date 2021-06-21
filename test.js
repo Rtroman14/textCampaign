@@ -19,6 +19,7 @@ const today = moment(new Date()).format("MM/DD/YYYY");
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
+<<<<<<< HEAD
         let [campaign] = campaigns.filter((campaign) => campaign.Client === "A Best Roofing");
 
         let view = "Text";
@@ -30,6 +31,9 @@ const today = moment(new Date()).format("MM/DD/YYYY");
         const contacts = await Airtable.getContacts(campaign["Base ID"], view);
 
         console.log(contacts.length);
+=======
+        console.log(campaigns);
+>>>>>>> e5810a904639b17034c90a7ed22cfba01ba0f09b
     } catch (error) {
         console.log(error.message);
     }

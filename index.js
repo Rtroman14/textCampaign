@@ -26,6 +26,7 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
+<<<<<<< HEAD
         // campaigns = campaigns.filter(
         //     (campaign) =>
         //         campaign.Client === "Valley Hill Roofing" ||
@@ -33,6 +34,9 @@ const numContacts = 50;
         //         campaign.Client === "Summa Media" ||
         //         campaign.Client === "D&D Roofing Consultants"
         // );
+=======
+        // campaigns = campaigns.filter((campaign) => campaign.Client === "Summa Media");
+>>>>>>> e5810a904639b17034c90a7ed22cfba01ba0f09b
 
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
@@ -130,9 +134,17 @@ const numContacts = 50;
 
         for (let campaign of campaigns) {
             // run at the end of loop
-            await Airtable.updateCampaign(campaign.recordID, {
-                "Last Updated": today,
-            });
+
+            if (campaign["Campaign Status"] === "Need More Contacts)") {
+                await Airtable.updateCampaign(campaign.recordID, {
+                    "Last Updated": today,
+                    "Campaign Status": "Live",
+                });
+            } else {
+                await Airtable.updateCampaign(campaign.recordID, {
+                    "Last Updated": today,
+                });
+            }
 
             await minutesWait(0.05);
         }
