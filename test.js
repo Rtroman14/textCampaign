@@ -16,15 +16,20 @@ const today = moment(new Date()).format("MM/DD/YYYY");
     try {
         const getCampaigns = await Airtable.getCampaigns();
         let campaigns = liveCampaigns(getCampaigns);
-        // campaigns = campaignsDueToday(campaigns);
-        // campaigns = campaignsToRun(campaigns);
+        campaigns = campaignsDueToday(campaigns);
+        campaigns = campaignsToRun(campaigns);
 
-        console.log(campaigns);
-<<<<<<< HEAD
-=======
+        let [campaign] = campaigns.filter((campaign) => campaign.Client === "A Best Roofing");
 
-        console.log(campaigns);
->>>>>>> 2268259af298e1556334ee577a8aafc91a8db6f7
+        let view = "Text";
+
+        if ("Tag" in campaign) {
+            view = `Text - ${campaign.Tag}`;
+        }
+
+        const contacts = await Airtable.getContacts(campaign["Base ID"], view);
+
+        console.log(contacts.length);
     } catch (error) {
         console.log(error.message);
     }
