@@ -26,7 +26,21 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
+<<<<<<< HEAD
         // campaigns = campaigns.filter((campaign) => campaign.Client === "I Am Roofing");
+=======
+<<<<<<< HEAD
+        // campaigns = campaigns.filter(
+        //     (campaign) =>
+        //         campaign.Client === "Valley Hill Roofing" ||
+        //         campaign.Client === "Armor Shield" ||
+        //         campaign.Client === "Summa Media" ||
+        //         campaign.Client === "D&D Roofing Consultants"
+        // );
+=======
+        // campaigns = campaigns.filter((campaign) => campaign.Client === "Summa Media");
+>>>>>>> e5810a904639b17034c90a7ed22cfba01ba0f09b
+>>>>>>> 7292fb5f83222aa7c0494cb82cdebd1e2676370f
 
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
@@ -88,10 +102,12 @@ const numContacts = 50;
                         await Airtable.updateCampaign(campaign.recordID, {
                             "Campaign Status": "Need More Contacts",
                             "Last Updated": today,
+                            "Contacts Left": 0,
                         });
                     } else {
                         await Airtable.updateCampaign(campaign.recordID, {
                             "Campaign Status": "Need More Contacts",
+                            "Contacts Left": 0,
                         });
                     }
 
@@ -102,6 +118,11 @@ const numContacts = 50;
 
                 if (i === numContacts - 1) {
                     const contacts = await Airtable.getContacts(campaign["Base ID"], view);
+
+                    await Airtable.updateCampaign(campaign.recordID, {
+                        "Campaign Status": "Need More Contacts",
+                        "Contacts Left": contacts.length,
+                    });
 
                     if (contacts.length < 100) {
                         await slackNotification(
