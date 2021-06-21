@@ -90,7 +90,7 @@ const numContacts = 50;
                         (currentCampaign) => currentCampaign.Campaign !== campaign.Campaign
                     );
 
-                    if (numContacts > 10) {
+                    if (i > 2) {
                         await Airtable.updateCampaign(campaign.recordID, {
                             "Campaign Status": "Need More Contacts",
                             "Last Updated": today,
