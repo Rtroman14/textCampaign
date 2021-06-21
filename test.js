@@ -19,6 +19,11 @@ const today = moment(new Date()).format("MM/DD/YYYY");
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
+        // campaigns = campaigns.filter(
+        //     (campaign) =>
+        //         campaign.Client === "Summa Media" || campaign.Client === "Valley Hill Roofing"
+        // );
+
         console.log(campaigns);
     } catch (error) {
         console.log(error.message);
