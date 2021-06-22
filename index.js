@@ -102,8 +102,9 @@ const numContacts = 50;
                     const contacts = await Airtable.getContacts(campaign["Base ID"], view);
 
                     await Airtable.updateCampaign(campaign.recordID, {
-                        "Campaign Status": "Need More Contacts",
+                        "Campaign Status": "Live",
                         "Contacts Left": contacts.length,
+                        "Last Updated": today,
                     });
 
                     if (contacts.length < 100) {
@@ -118,22 +119,22 @@ const numContacts = 50;
             await minutesWait(2);
         }
 
-        for (let campaign of campaigns) {
-            // run at the end of loop
+        // for (let campaign of campaigns) {
+        //     // run at the end of loop
 
-            if (campaign["Campaign Status"] === "Need More Contacts") {
-                await Airtable.updateCampaign(campaign.recordID, {
-                    "Last Updated": today,
-                    "Campaign Status": "Live",
-                });
-            } else {
-                await Airtable.updateCampaign(campaign.recordID, {
-                    "Last Updated": today,
-                });
-            }
+        //     if (campaign["Campaign Status"] === "Need More Contacts") {
+        //         await Airtable.updateCampaign(campaign.recordID, {
+        //             "Last Updated": today,
+        //             "Campaign Status": "Live",
+        //         });
+        //     } else {
+        //         await Airtable.updateCampaign(campaign.recordID, {
+        //             "Last Updated": today,
+        //         });
+        //     }
 
-            await minutesWait(0.05);
-        }
+        //     await minutesWait(0.05);
+        // }
     } catch (error) {
         console.log(error);
     }
