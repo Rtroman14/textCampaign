@@ -26,7 +26,12 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        campaigns = campaigns.filter((campaign) => campaign.Client === "Summa Media");
+        // campaigns = campaigns.filter(
+        //     (campaign) =>
+        //         campaign.Client === "Summa Media" ||
+        //         campaign.Client === "Valley Hill Roofing" ||
+        //         campaign.Client === "D&D Roofing Consultants"
+        // );
 
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
@@ -58,15 +63,6 @@ const numContacts = 50;
                             console.log(
                                 `Client: ${campaign.Client} | Campaign: ${campaign.Campaign} | texted: ${highLevelContact.name}`
                             );
-                        }
-
-                        if (
-                            numContacts === 1 &&
-                            campaign["Campaign Status"] === "Need More Contacts"
-                        ) {
-                            await Airtable.updateCampaign(campaign.recordID, {
-                                "Campaign Status": "Live",
-                            });
                         }
                     } catch (error) {
                         // RUNS IF ERROR WHILE TEXTING
@@ -125,7 +121,7 @@ const numContacts = 50;
         for (let campaign of campaigns) {
             // run at the end of loop
 
-            if (campaign["Campaign Status"] === "Need More Contacts)") {
+            if (campaign["Campaign Status"] === "Need More Contacts") {
                 await Airtable.updateCampaign(campaign.recordID, {
                     "Last Updated": today,
                     "Campaign Status": "Live",
