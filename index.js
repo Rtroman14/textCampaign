@@ -26,14 +26,13 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        // campaigns = campaigns.filter(
-        //     (campaign) =>
-        //         campaign.Client === "Summa Media" ||
-        //         campaign.Client === "Valley Hill Roofing" ||
-        //         campaign.Client === "D&D Roofing Consultants"
-        // );
+        campaigns = campaigns.filter(
+            (campaign) => campaign.Client === "Summa Media"
+            // campaign.Client === "Valley Hill Roofing" ||
+            // campaign.Client === "D&D Roofing Consultants"
+        );
 
-        for (let i = 0; i < numContacts; i++) {
+        for (let i = 1; i < numContacts + 1; i++) {
             for (let campaign of campaigns) {
                 const Highlevel = new HighlevelApi(campaign["API Token"]);
 
@@ -98,7 +97,7 @@ const numContacts = 50;
                     );
                 }
 
-                if (i === numContacts - 1) {
+                if (i === numContacts) {
                     const contacts = await Airtable.getContacts(campaign["Base ID"], view);
 
                     await Airtable.updateCampaign(campaign.recordID, {
@@ -112,29 +111,12 @@ const numContacts = 50;
                             `\n*Client:* ${campaign.Client}\n*Campaign:* ${campaign.Campaign} \n*Number of contacts:* ${contacts.length}\n`
                         );
                     }
+                } else {
+                    console.log(`\n --- Texts sent: ${i} --- \n`);
+                    await minutesWait(2);
                 }
             }
-
-            console.log(`\n --- Texts sent: ${i + 1} --- \n`);
-            await minutesWait(2);
         }
-
-        // for (let campaign of campaigns) {
-        //     // run at the end of loop
-
-        //     if (campaign["Campaign Status"] === "Need More Contacts") {
-        //         await Airtable.updateCampaign(campaign.recordID, {
-        //             "Last Updated": today,
-        //             "Campaign Status": "Live",
-        //         });
-        //     } else {
-        //         await Airtable.updateCampaign(campaign.recordID, {
-        //             "Last Updated": today,
-        //         });
-        //     }
-
-        //     await minutesWait(0.05);
-        // }
     } catch (error) {
         console.log(error);
     }
