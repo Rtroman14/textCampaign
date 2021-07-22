@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const moment = require("moment");
+const axios = require("axios");
 
 const AirtableApi = require("./src/airtable");
 const HighlevelApi = require("./src/Highlevel");
@@ -26,7 +27,21 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
+<<<<<<< HEAD
         for (let i = 0; i < numContacts; i++) {
+=======
+        campaigns = campaigns.filter(
+            (campaign) =>
+                // campaign.Client === "Competitive Commercial Roofing" ||
+                // campaign.Client === "Class A Roofing" ||
+                // campaign.Client === "Red Leaf Solutions" ||
+                // campaign.Client === "A Best Roofing" ||
+                // campaign.Client === "Berrong"
+                campaign.Client === "I Am Roofing"
+        );
+
+        for (let i = 1; i < numContacts + 1; i++) {
+>>>>>>> 331679da404a90c07ec8a5133f3bfcaf74979a61
             for (let campaign of campaigns) {
                 const Highlevel = new HighlevelApi(campaign["API Token"]);
 
@@ -56,6 +71,13 @@ const numContacts = 50;
                             console.log(
                                 `Client: ${campaign.Client} | Campaign: ${campaign.Campaign} | texted: ${highLevelContact.name}`
                             );
+
+                            if (campaign.Client === "Greenscape") {
+                                await axios.post(
+                                    "https://greenscape.netlify.app/.netlify/functions/addToPipedrive",
+                                    highLevelContact
+                                );
+                            }
                         }
                     } catch (error) {
                         // RUNS IF ERROR WHILE TEXTING
@@ -91,7 +113,7 @@ const numContacts = 50;
                     );
                 }
 
-                if (i === numContacts - 1) {
+                if (i === numContacts) {
                     const contacts = await Airtable.getContacts(campaign["Base ID"], view);
 
                     await Airtable.updateCampaign(campaign.recordID, {
@@ -105,29 +127,13 @@ const numContacts = 50;
                             `\n*Client:* ${campaign.Client}\n*Campaign:* ${campaign.Campaign} \n*Number of contacts:* ${contacts.length}\n`
                         );
                     }
+                } else {
                 }
             }
 
-            console.log(`\n --- Texts sent: ${i + 1} --- \n`);
+            console.log(`\n --- Texts sent: ${i} --- \n`);
             await minutesWait(2);
         }
-
-        // for (let campaign of campaigns) {
-        //     // run at the end of loop
-
-        //     if (campaign["Campaign Status"] === "Need More Contacts") {
-        //         await Airtable.updateCampaign(campaign.recordID, {
-        //             "Last Updated": today,
-        //             "Campaign Status": "Live",
-        //         });
-        //     } else {
-        //         await Airtable.updateCampaign(campaign.recordID, {
-        //             "Last Updated": today,
-        //         });
-        //     }
-
-        //     await minutesWait(0.05);
-        // }
     } catch (error) {
         console.log(error);
     }
