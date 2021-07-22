@@ -27,9 +27,6 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-<<<<<<< HEAD
-        for (let i = 0; i < numContacts; i++) {
-=======
         campaigns = campaigns.filter(
             (campaign) =>
                 // campaign.Client === "Competitive Commercial Roofing" ||
@@ -41,7 +38,6 @@ const numContacts = 50;
         );
 
         for (let i = 1; i < numContacts + 1; i++) {
->>>>>>> 331679da404a90c07ec8a5133f3bfcaf74979a61
             for (let campaign of campaigns) {
                 const Highlevel = new HighlevelApi(campaign["API Token"]);
 
