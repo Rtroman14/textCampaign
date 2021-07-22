@@ -1,16 +1,24 @@
 require("dotenv").config();
 
+const moment = require("moment");
+const axios = require("axios");
+
 const AirtableApi = require("./src/airtable");
 const HighlevelApi = require("./src/Highlevel");
+const {
+    liveCampaigns,
+    mapContact,
+    minutesWait,
+    campaignsToRun,
+    campaignsDueToday,
+} = require("./src/helpers");
+const slackNotification = require("./src/slackNotification");
 
 const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
-const { campaignsDueToday, liveCampaigns, campaignsToRun } = require("./src/helpers");
-
-const slackNotification = require("./src/slackNotification");
-
-const moment = require("moment");
 const today = moment(new Date()).format("MM/DD/YYYY");
+
+const numContacts = 50;
 
 (async () => {
     try {
@@ -19,7 +27,7 @@ const today = moment(new Date()).format("MM/DD/YYYY");
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        let [campaign] = campaigns.filter((campaign) => campaign.Client === "A Best Roofing");
+        let campaign = campaigns.find((campaign) => campaign.Client === "Greenscape");
 
         let view = "Text";
 
@@ -27,10 +35,21 @@ const today = moment(new Date()).format("MM/DD/YYYY");
             view = `Text - ${campaign.Tag}`;
         }
 
-        const contacts = await Airtable.getContacts(campaign["Base ID"], view);
+        const contact = await Airtable.getContact(campaign["Base ID"], view);
 
-        console.log(contacts.length);
+        if (contact) {
+            const highLevelContact = mapContact(contact);
+
+            if (campaign.Client === "Greenscape") {
+                await axios.post(
+                    "https://greenscape.netlify.app/.netlify/functions/addToPipedrive",
+                    highLevelContact
+                );
+
+                console.log("Sent contact to pipedrive", highLevelContact);
+            }
+        }
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
     }
 })();

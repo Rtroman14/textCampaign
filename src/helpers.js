@@ -91,9 +91,10 @@ module.exports = {
             email: contact.Email || "",
             phone: contact["Phone Number"] || "",
             address1: contact.Address || "",
+            street: contact.Street || "",
             city: contact.City || "",
             state: contact.State || "",
-            postalCode: contact["Zip Code"] || "",
+            postalCode: contact.Zip || "",
         };
     },
 };

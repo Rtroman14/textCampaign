@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const moment = require("moment");
+const axios = require("axios");
 
 const AirtableApi = require("./src/airtable");
 const HighlevelApi = require("./src/Highlevel");
@@ -27,9 +28,13 @@ const numContacts = 50;
         campaigns = campaignsToRun(campaigns);
 
         campaigns = campaigns.filter(
-            (campaign) => campaign.Client === "Summa Media"
-            // campaign.Client === "Valley Hill Roofing" ||
-            // campaign.Client === "D&D Roofing Consultants"
+            (campaign) =>
+                // campaign.Client === "Competitive Commercial Roofing" ||
+                // campaign.Client === "Class A Roofing" ||
+                // campaign.Client === "Red Leaf Solutions" ||
+                // campaign.Client === "A Best Roofing" ||
+                // campaign.Client === "Berrong"
+                campaign.Client === "I Am Roofing"
         );
 
         for (let i = 1; i < numContacts + 1; i++) {
@@ -62,6 +67,13 @@ const numContacts = 50;
                             console.log(
                                 `Client: ${campaign.Client} | Campaign: ${campaign.Campaign} | texted: ${highLevelContact.name}`
                             );
+
+                            if (campaign.Client === "Greenscape") {
+                                await axios.post(
+                                    "https://greenscape.netlify.app/.netlify/functions/addToPipedrive",
+                                    highLevelContact
+                                );
+                            }
                         }
                     } catch (error) {
                         // RUNS IF ERROR WHILE TEXTING
@@ -112,10 +124,11 @@ const numContacts = 50;
                         );
                     }
                 } else {
-                    console.log(`\n --- Texts sent: ${i} --- \n`);
-                    await minutesWait(2);
                 }
             }
+
+            console.log(`\n --- Texts sent: ${i} --- \n`);
+            await minutesWait(2);
         }
     } catch (error) {
         console.log(error);
