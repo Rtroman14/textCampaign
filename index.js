@@ -26,13 +26,6 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        // campaigns = campaigns.filter(
-        //     (campaign) =>
-        //         campaign.Client === "Summa Media" ||
-        //         campaign.Client === "Valley Hill Roofing" ||
-        //         campaign.Client === "D&D Roofing Consultants"
-        // );
-
         for (let i = 0; i < numContacts; i++) {
             for (let campaign of campaigns) {
                 const Highlevel = new HighlevelApi(campaign["API Token"]);
