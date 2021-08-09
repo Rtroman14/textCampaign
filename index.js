@@ -27,15 +27,19 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        campaigns = campaigns.filter(
-            (campaign) =>
-                // campaign.Client === "Competitive Commercial Roofing" ||
-                // campaign.Client === "Class A Roofing" ||
-                // campaign.Client === "Red Leaf Solutions" ||
-                // campaign.Client === "A Best Roofing" ||
-                // campaign.Client === "Berrong"
-                campaign.Client === "I Am Roofing"
-        );
+        // campaigns = campaigns.filter(
+        //     (campaign) =>
+        // campaign.Client === "A Best Roofing" ||
+        // campaign.Client === "Built Right Roofing" ||
+        // campaign.Client === "Berrong" ||
+        // campaign.Client === "Class A Roofing" ||
+        // campaign.Client === "Competitive Commercial Roofing" ||
+        // campaign.Client === "Duro-Last LAX" ||
+        // campaign.Client === "Covenant Roofing" ||
+        // campaign.Client === "MK Roofing" ||
+        // campaign.Client === "Flat Roof Solutions"
+        // campaign.Client === "Valley Hill Roofing"
+        // );
 
         for (let i = 1; i < numContacts + 1; i++) {
             for (let campaign of campaigns) {
