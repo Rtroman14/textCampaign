@@ -27,15 +27,16 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        campaigns = campaigns.filter(
-            (campaign) =>
-                // campaign.Client === "Competitive Commercial Roofing" ||
-                // campaign.Client === "Class A Roofing" ||
-                // campaign.Client === "Red Leaf Solutions" ||
-                // campaign.Client === "A Best Roofing" ||
-                // campaign.Client === "Berrong"
-                campaign.Client === "I Am Roofing"
-        );
+        // campaigns = campaigns.filter(
+        //     (campaign) =>
+        //         //         campaign.Client === "A Best Roofing" ||
+        //         //         campaign.Client === "Competitive Commercial Roofing" ||
+        //         // campaign.Client === "Class A Roofing" ||
+        //         //         campaign.Client === "Red Leaf Solutions" ||
+        //         //         campaign.Client === "Berrong" ||
+        //         //         // campaign.Client === "Roper Roofing"
+        //         campaign.Client === "Flat Roof Solutions"
+        // );
 
         for (let i = 1; i < numContacts + 1; i++) {
             for (let campaign of campaigns) {
@@ -118,7 +119,7 @@ const numContacts = 50;
                         "Last Updated": today,
                     });
 
-                    if (contacts.length < 100) {
+                    if (contacts.length <= 150) {
                         await slackNotification(
                             `\n*Client:* ${campaign.Client}\n*Campaign:* ${campaign.Campaign} \n*Number of contacts:* ${contacts.length}\n`
                         );
