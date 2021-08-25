@@ -57,7 +57,7 @@ module.exports = class Highlevel {
             const res = await axios(config);
             return res;
         } catch (error) {
-            console.log("ERROR ADDTOCAMPAIGN ---", error);
+            console.log("ERROR ADDTOCAMPAIGN ---", error.message);
         }
     }
 
@@ -69,7 +69,7 @@ module.exports = class Highlevel {
 
             return res;
         } catch (error) {
-            console.log("ERROR TEXTCONTACT ---", error);
+            console.log("ERROR TEXTCONTACT ---", error.message);
         }
     }
 };
