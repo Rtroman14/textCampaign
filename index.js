@@ -27,18 +27,15 @@ const numContacts = 50;
         campaigns = campaignsDueToday(campaigns);
         campaigns = campaignsToRun(campaigns);
 
-        campaigns = campaigns.filter(
-            (campaign) =>
-                // campaign.Client === "A Best Roofing" ||
-                // campaign.Client === "Built Right Roofing" ||
-                // campaign.Client === "Berrong" ||
-                // campaign.Client === "Class A Roofing" ||
-                // campaign.Client === "D&D Roofing Consultants" ||
-                // campaign.Client === "Duro-Last LAX" ||
-                // campaign.Client === "Covenant Roofing" ||
-                // campaign.Client === "MK Roofing" ||
-                campaign.Client === "Premier Building Associates" || campaign.Client === "McKinnis"
-        );
+        // campaigns = campaigns.filter(
+        //     (campaign) =>
+        //         campaign.Client === "XL Roofing" ||
+        //         campaign.Client === "Greenscape" ||
+        //         campaign.Client === "Red Leaf Solutions" ||
+        //         campaign.Client === "Built Right Roofing"
+        // );
+
+        await slackNotification("Launching texts...");
 
         for (let i = 1; i < numContacts + 1; i++) {
             for (let campaign of campaigns) {

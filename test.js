@@ -11,6 +11,7 @@ const {
     minutesWait,
     campaignsToRun,
     campaignsDueToday,
+    campaignsToRunTest,
 } = require("./src/helpers");
 const slackNotification = require("./src/slackNotification");
 
@@ -23,32 +24,16 @@ const numContacts = 50;
 (async () => {
     try {
         const getCampaigns = await Airtable.getCampaigns();
-        let campaigns = liveCampaigns(getCampaigns);
-        campaigns = campaignsDueToday(campaigns);
-        campaigns = campaignsToRun(campaigns);
+        // let campaigns = liveCampaigns(getCampaigns);
+        // campaigns = campaignsDueToday(campaigns);
+        // campaigns = campaignsToRun(campaigns);
 
-        let campaign = campaigns.find((campaign) => campaign.Client === "Greenscape");
+        // console.log(campaigns);
 
-        let view = "Text";
+        const campaigns = campaignsToRunTest(getCampaigns);
 
-        if ("Tag" in campaign) {
-            view = `Text - ${campaign.Tag}`;
-        }
-
-        const contact = await Airtable.getContact(campaign["Base ID"], view);
-
-        if (contact) {
-            const highLevelContact = mapContact(contact);
-
-            if (campaign.Client === "Greenscape") {
-                await axios.post(
-                    "https://greenscape.netlify.app/.netlify/functions/addToPipedrive",
-                    highLevelContact
-                );
-
-                console.log("Sent contact to pipedrive", highLevelContact);
-            }
-        }
+        console.log(campaigns);
+        console.log(campaigns.length);
     } catch (error) {
         console.log(error);
     }

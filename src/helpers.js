@@ -83,6 +83,35 @@ module.exports = {
         return textCampaigns;
     },
 
+    campaignsToRunTest(campaigns) {
+        let allLiveCampaigns = liveCampaigns(campaigns);
+        // let todayCampaigns = this.campaignsDueToday(liveCampaigns);
+
+        let accounts = [];
+
+        allLiveCampaigns.forEach((liveCampaign) => {
+            const liveAccount = liveCampaign.Account;
+
+            let accountIndex;
+
+            const foundAccount = accounts.find((el, index) => {
+                accountIndex = index;
+                return el.Account === liveAccount;
+            });
+
+            if (foundAccount) {
+                accounts[accountIndex].push(foundAccount);
+            }
+
+            return accounts.push(liveCampaign);
+        });
+
+        // get all campaigns
+        // create array of array of campaigns by "Account"
+        // filter out campaigns that don't have all fields
+        // create array of arrays based on "Account"
+    },
+
     mapContact(contact) {
         return {
             firstName: contact["First Name"] || "",
@@ -90,8 +119,7 @@ module.exports = {
             name: `${contact["First Name"]} ${contact["Last Name"]}`,
             email: contact.Email || "",
             phone: contact["Phone Number"] || "",
-            address1: contact.Address || "",
-            street: contact.Street || "",
+            address1: contact.Street || "",
             city: contact.City || "",
             state: contact.State || "",
             postalCode: contact.Zip || "",
