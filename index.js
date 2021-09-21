@@ -5,16 +5,12 @@ const axios = require("axios");
 
 const AirtableApi = require("./src/airtable");
 const HighlevelApi = require("./src/Highlevel");
-const {
-    liveCampaigns,
-    mapContact,
-    minutesWait,
-    campaignsToRun,
-    campaignsDueToday,
-} = require("./src/helpers");
-const slackNotification = require("./src/slackNotification");
+const HelpersApi = require("./src/Helpers");
 
+const Helpers = new HelpersApi();
 const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
+
+const slackNotification = require("./src/slackNotification");
 
 const today = moment(new Date()).format("MM/DD/YYYY");
 
@@ -23,9 +19,9 @@ const numContacts = 50;
 (async () => {
     try {
         const getCampaigns = await Airtable.getCampaigns();
-        let campaigns = liveCampaigns(getCampaigns);
-        campaigns = campaignsDueToday(campaigns);
-        campaigns = campaignsToRun(campaigns);
+        let campaigns = Helpers.liveCampaigns(getCampaigns);
+        campaigns = Helpers.campaignsDueToday(campaigns);
+        campaigns = Helpers.campaignsToRun(campaigns);
 
         // campaigns = campaigns.filter(
         //     (campaign) =>
@@ -50,7 +46,7 @@ const numContacts = 50;
                 const contact = await Airtable.getContact(campaign["Base ID"], view);
 
                 if (contact) {
-                    const highLevelContact = mapContact(contact);
+                    const highLevelContact = Helpers.mapContact(contact);
 
                     try {
                         const texted = await Highlevel.textContact(
@@ -128,7 +124,7 @@ const numContacts = 50;
             }
 
             console.log(`\n --- Texts sent: ${i} --- \n`);
-            await minutesWait(2);
+            await Helpers.minutesWait(2);
         }
     } catch (error) {
         console.log(error);

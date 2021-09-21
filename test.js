@@ -5,36 +5,49 @@ const axios = require("axios");
 
 const AirtableApi = require("./src/airtable");
 const HighlevelApi = require("./src/Highlevel");
-const {
-    liveCampaigns,
-    mapContact,
-    minutesWait,
-    campaignsToRun,
-    campaignsDueToday,
-    campaignsToRunTest,
-} = require("./src/helpers");
-const slackNotification = require("./src/slackNotification");
+
+const HelpersApi = require("./src/Helpers");
+const Helpers = new HelpersApi();
 
 const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
 const today = moment(new Date()).format("MM/DD/YYYY");
 
-const numContacts = 50;
-
 (async () => {
     try {
         const getCampaigns = await Airtable.getCampaigns();
-        // let campaigns = liveCampaigns(getCampaigns);
-        // campaigns = campaignsDueToday(campaigns);
-        // campaigns = campaignsToRun(campaigns);
+        let campaigns = Helpers.campaignsToRunTest(getCampaigns);
 
+        const numContacts = 5;
         // console.log(campaigns);
+        for (let i = 1; i < numContacts + 1; i++) {
+            for (let campaign of campaigns) {
+                let [runCampaign] = campaign;
 
-        const campaigns = campaignsToRunTest(getCampaigns);
+                if (i === 2 && runCampaign.Account === "XL Roofing") {
+                    // remove campaign from list
+                    campaigns = campaigns.filter(
+                        (currentCampaign) =>
+                            currentCampaign.Campaign !== "XL Roofing - Austin Hail Campaign #1"
+                    );
+                }
 
-        console.log(campaigns);
-        console.log(campaigns.length);
+                console.log(runCampaign);
+            }
+        }
     } catch (error) {
         console.log(error);
     }
 })();
+
+// let arr = [1, 2, 3, 4];
+
+// for (let i = 0; i < 3; i++) {
+//     for (let a of arr) {
+//         if (i === 1) {
+//             arr = arr.filter((currentCampaign) => currentCampaign !== 2);
+//         }
+
+//         console.log(a);
+//     }
+// }

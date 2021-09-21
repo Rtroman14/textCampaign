@@ -1,12 +1,12 @@
 const moment = require("moment");
 const today = moment(new Date()).format("YYYY-MM-DD");
 
-module.exports = {
+module.exports = class HelperApi {
     async minutesWait(minutes) {
         return await new Promise((resolve) => {
             setTimeout(resolve, 60000 * minutes);
         });
-    },
+    }
 
     liveCampaigns(campaigns) {
         return campaigns.filter((campaign) => {
@@ -24,7 +24,7 @@ module.exports = {
                 }
             }
         });
-    },
+    }
 
     campaignsDueToday(campaigns) {
         return campaigns.filter((campaign) => {
@@ -36,7 +36,7 @@ module.exports = {
                 return campaign;
             }
         });
-    },
+    }
 
     campaignsToRun(campaigns) {
         let textCampaigns = [];
@@ -81,36 +81,25 @@ module.exports = {
         });
 
         return textCampaigns;
-    },
+    }
 
     campaignsToRunTest(campaigns) {
-        let allLiveCampaigns = liveCampaigns(campaigns);
-        // let todayCampaigns = this.campaignsDueToday(liveCampaigns);
+        let liveCampaigns = this.liveCampaigns(campaigns);
+        let todayCampaigns = this.campaignsDueToday(liveCampaigns);
 
-        let accounts = [];
+        let accounts = [...new Set(todayCampaigns.map((el) => el.Account))];
 
-        allLiveCampaigns.forEach((liveCampaign) => {
-            const liveAccount = liveCampaign.Account;
+        let accountData = [];
 
-            let accountIndex;
+        for (let account of accounts) {
+            const data = todayCampaigns
+                .filter((client) => client.Account === account)
+                .sort((a, b) => new Date(a["Last Updated"]) - new Date(b["Last Updated"]));
+            accountData.push(data);
+        }
 
-            const foundAccount = accounts.find((el, index) => {
-                accountIndex = index;
-                return el.Account === liveAccount;
-            });
-
-            if (foundAccount) {
-                accounts[accountIndex].push(foundAccount);
-            }
-
-            return accounts.push(liveCampaign);
-        });
-
-        // get all campaigns
-        // create array of array of campaigns by "Account"
-        // filter out campaigns that don't have all fields
-        // create array of arrays based on "Account"
-    },
+        return accountData;
+    }
 
     mapContact(contact) {
         return {
@@ -124,5 +113,5 @@ module.exports = {
             state: contact.State || "",
             postalCode: contact.Zip || "",
         };
-    },
+    }
 };
