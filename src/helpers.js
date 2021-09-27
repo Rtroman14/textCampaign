@@ -83,6 +83,37 @@ module.exports = class HelperApi {
         return textCampaigns;
     }
 
+    accountsToRun(campaigns) {
+        let accounts = [];
+
+        let liveCampaigns = this.liveCampaigns(campaigns);
+        let todayCampaigns = this.campaignsDueToday(liveCampaigns);
+
+        todayCampaigns = todayCampaigns.sort(
+            (a, b) => new Date(a["Last Updated"]) - new Date(b["Last Updated"])
+        );
+
+        for (let todayCampaign of todayCampaigns) {
+            if (!("Last Updated" in todayCampaign)) {
+                accounts.push(todayCampaign);
+            }
+        }
+
+        let accountNames = [...new Set(todayCampaigns.map((el) => el.Account))];
+
+        for (let accountName of accountNames) {
+            const foundAccount = todayCampaigns.find((el) => el.Account === accountName);
+
+            const accountInAccounts = accounts.find((el) => el.Account === accountName);
+
+            if (!accountInAccounts) {
+                accounts.push(foundAccount);
+            }
+        }
+
+        return accounts;
+    }
+
     campaignsToRunTest(campaigns) {
         let liveCampaigns = this.liveCampaigns(campaigns);
         let todayCampaigns = this.campaignsDueToday(liveCampaigns);

@@ -19,31 +19,23 @@ const numContacts = 50;
 (async () => {
     try {
         const getCampaigns = await Airtable.getCampaigns();
-        let campaigns = Helpers.liveCampaigns(getCampaigns);
-        campaigns = Helpers.campaignsDueToday(campaigns);
-        campaigns = Helpers.campaignsToRun(campaigns);
+        let accounts = Helpers.accountsToRun(getCampaigns);
 
-        // campaigns = campaigns.filter(
-        //     (campaign) =>
-        //         campaign.Client === "XL Roofing" ||
-        //         campaign.Client === "Greenscape" ||
-        //         campaign.Client === "Red Leaf Solutions" ||
-        //         campaign.Client === "Built Right Roofing"
-        // );
+        accounts = accounts.filter((account) => account.Account === "XL Roofing");
 
         await slackNotification("Launching texts...");
 
         for (let i = 1; i < numContacts + 1; i++) {
-            for (let campaign of campaigns) {
-                const Highlevel = new HighlevelApi(campaign["API Token"]);
+            for (let account of accounts) {
+                const Highlevel = new HighlevelApi(account["API Token"]);
 
                 let view = "Text";
 
-                if ("Tag" in campaign) {
-                    view = `Text - ${campaign.Tag}`;
+                if ("Tag" in account) {
+                    view = `Text - ${account.Tag}`;
                 }
 
-                const contact = await Airtable.getContact(campaign["Base ID"], view);
+                const contact = await Airtable.getContact(account["Base ID"], view);
 
                 if (contact) {
                     const highLevelContact = Helpers.mapContact(contact);
@@ -51,20 +43,20 @@ const numContacts = 50;
                     try {
                         const texted = await Highlevel.textContact(
                             highLevelContact,
-                            campaign["Campaign ID"]
+                            account["Campaign ID"]
                         );
 
                         if (texted.status == "200") {
-                            await Airtable.updateContact(campaign["Base ID"], contact.recordID, {
+                            await Airtable.updateContact(account["Base ID"], contact.recordID, {
                                 "In Campaign": true,
-                                Campaign: campaign.Campaign,
+                                Campaign: account.Campaign,
                             });
 
                             console.log(
-                                `Client: ${campaign.Client} | Campaign: ${campaign.Campaign} | texted: ${highLevelContact.name}`
+                                `Client: ${account.Client} | Campaign: ${account.Campaign} | texted: ${highLevelContact.name}`
                             );
 
-                            if (campaign.Client === "Greenscape") {
+                            if (account.Client === "Greenscape") {
                                 await axios.post(
                                     "https://greenscape.netlify.app/.netlify/functions/addToPipedrive",
                                     highLevelContact
@@ -73,42 +65,42 @@ const numContacts = 50;
                         }
                     } catch (error) {
                         // RUNS IF ERROR WHILE TEXTING
-                        await Airtable.updateContact(campaign["Base ID"], contact.recordID, {
+                        await Airtable.updateContact(account["Base ID"], contact.recordID, {
                             Error: true,
                         });
 
                         console.log(
-                            `ERROR TEXTING CONTACT --- ${campaign.Client} --- ${error.message}`
+                            `ERROR TEXTING CONTACT --- ${account.Client} --- ${error.message}`
                         );
                     }
                 } else {
-                    // remove campaign from list
-                    campaigns = campaigns.filter(
-                        (currentCampaign) => currentCampaign.Campaign !== campaign.Campaign
+                    // remove account from list
+                    accounts = accounts.filter(
+                        (currentCampaign) => currentCampaign.Campaign !== account.Campaign
                     );
 
                     if (i > 2) {
-                        await Airtable.updateCampaign(campaign.recordID, {
+                        await Airtable.updateCampaign(account.recordID, {
                             "Campaign Status": "Need More Contacts",
                             "Last Updated": today,
                             "Contacts Left": 0,
                         });
                     } else {
-                        await Airtable.updateCampaign(campaign.recordID, {
+                        await Airtable.updateCampaign(account.recordID, {
                             "Campaign Status": "Need More Contacts",
                             "Contacts Left": 0,
                         });
                     }
 
                     await slackNotification(
-                        `\n*Client:* ${campaign.Client}\n*Campaign:* ${campaign.Campaign} \n*Number of contacts:* 0\n`
+                        `\n*Client:* ${account.Client}\n*Campaign:* ${account.Campaign} \n*Number of contacts:* 0\n`
                     );
                 }
 
                 if (i === numContacts) {
-                    const contacts = await Airtable.getContacts(campaign["Base ID"], view);
+                    const contacts = await Airtable.getContacts(account["Base ID"], view);
 
-                    await Airtable.updateCampaign(campaign.recordID, {
+                    await Airtable.updateCampaign(account.recordID, {
                         "Campaign Status": "Live",
                         "Contacts Left": contacts.length,
                         "Last Updated": today,
@@ -116,7 +108,7 @@ const numContacts = 50;
 
                     if (contacts.length <= 150) {
                         await slackNotification(
-                            `\n*Client:* ${campaign.Client}\n*Campaign:* ${campaign.Campaign} \n*Number of contacts:* ${contacts.length}\n`
+                            `\n*Client:* ${account.Client}\n*Campaign:* ${account.Campaign} \n*Number of contacts:* ${contacts.length}\n`
                         );
                     }
                 } else {

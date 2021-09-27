@@ -16,25 +16,26 @@ const today = moment(new Date()).format("MM/DD/YYYY");
 (async () => {
     try {
         const getCampaigns = await Airtable.getCampaigns();
-        let campaigns = Helpers.campaignsToRunTest(getCampaigns);
+        let accounts = Helpers.accountsToRun(getCampaigns);
+        console.log(accounts);
 
-        const numContacts = 5;
-        // console.log(campaigns);
-        for (let i = 1; i < numContacts + 1; i++) {
-            for (let campaign of campaigns) {
-                let [runCampaign] = campaign;
+        // const numContacts = 5;
+        // // console.log(campaigns);
+        // for (let i = 1; i < numContacts + 1; i++) {
+        //     for (let campaign of campaigns) {
+        //         let [runCampaign] = campaign;
 
-                if (i === 2 && runCampaign.Account === "XL Roofing") {
-                    // remove campaign from list
-                    campaigns = campaigns.filter(
-                        (currentCampaign) =>
-                            currentCampaign.Campaign !== "XL Roofing - Austin Hail Campaign #1"
-                    );
-                }
+        //         if (i === 2 && runCampaign.Account === "XL Roofing") {
+        //             // remove campaign from list
+        //             campaigns = campaigns.filter(
+        //                 (currentCampaign) =>
+        //                     currentCampaign.Campaign !== "XL Roofing - Austin Hail Campaign #1"
+        //             );
+        //         }
 
-                console.log(runCampaign);
-            }
-        }
+        //         console.log(runCampaign);
+        //     }
+        // }
     } catch (error) {
         console.log(error);
     }
