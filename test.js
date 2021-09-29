@@ -17,6 +17,7 @@ const today = moment(new Date()).format("MM/DD/YYYY");
     try {
         const getCampaigns = await Airtable.getCampaigns();
         let accounts = Helpers.accountsToRun(getCampaigns);
+
         console.log(accounts);
 
         // const numContacts = 5;

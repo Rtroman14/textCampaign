@@ -111,6 +111,8 @@ module.exports = class HelperApi {
             }
         }
 
+        accounts = this.sortByKeyString(accounts, "Account");
+
         return accounts;
     }
 
@@ -144,5 +146,9 @@ module.exports = class HelperApi {
             state: contact.State || "",
             postalCode: contact.Zip || "",
         };
+    }
+
+    sortByKeyString(array, key) {
+        return array.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
     }
 };
