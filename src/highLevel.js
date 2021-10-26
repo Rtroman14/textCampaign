@@ -67,7 +67,7 @@ module.exports = class Highlevel {
 
             const res = await this.addToCampaign(contact.id, campaignID);
 
-            return res;
+            return { ...contact, ...res };
         } catch (error) {
             console.log("ERROR TEXTCONTACT ---", error.message);
         }

@@ -18,38 +18,45 @@ const today = moment(new Date()).format("MM/DD/YYYY");
         const getCampaigns = await Airtable.getCampaigns();
         let accounts = Helpers.accountsToRun(getCampaigns);
 
-        console.log(accounts);
+        let account = accounts.find((el) => el.Client === "Summa Media");
 
-        // const numContacts = 5;
-        // // console.log(campaigns);
-        // for (let i = 1; i < numContacts + 1; i++) {
-        //     for (let campaign of campaigns) {
-        //         let [runCampaign] = campaign;
+        const Highlevel = new HighlevelApi(account["API Token"]);
 
-        //         if (i === 2 && runCampaign.Account === "XL Roofing") {
-        //             // remove campaign from list
-        //             campaigns = campaigns.filter(
-        //                 (currentCampaign) =>
-        //                     currentCampaign.Campaign !== "XL Roofing - Austin Hail Campaign #1"
-        //             );
-        //         }
+        let view = "Text";
 
-        //         console.log(runCampaign);
-        //     }
-        // }
+        if ("Tag" in account) {
+            view = `Text - ${account.Tag}`;
+        }
+
+        const contact = await Airtable.getContact(account["Base ID"], view);
+
+        console.log(contact);
+
+        if (contact) {
+            const highLevelContact = Helpers.mapContact(contact);
+
+            const texted = await Highlevel.textContact(highLevelContact, account["Campaign ID"]);
+
+            if (texted.status == "200") {
+                await Airtable.updateContact(account["Base ID"], contact.recordID, {
+                    "In Campaign": true,
+                    Campaign: account.Campaign,
+                    "Highlevel ID": texted.id,
+                });
+
+                console.log(
+                    `Account: ${account.Account} | Campaign: ${account.Campaign} | texted: ${highLevelContact.name}`
+                );
+
+                // if (account.Client === "Greenscape") {
+                //     await axios.post(
+                //         "https://greenscape.netlify.app/.netlify/functions/addToPipedrive",
+                //         highLevelContact
+                //     );
+                // }
+            }
+        }
     } catch (error) {
         console.log(error);
     }
 })();
-
-// let arr = [1, 2, 3, 4];
-
-// for (let i = 0; i < 3; i++) {
-//     for (let a of arr) {
-//         if (i === 1) {
-//             arr = arr.filter((currentCampaign) => currentCampaign !== 2);
-//         }
-
-//         console.log(a);
-//     }
-// }

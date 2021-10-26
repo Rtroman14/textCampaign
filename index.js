@@ -14,30 +14,32 @@ const slackNotification = require("./src/slackNotification");
 
 const today = moment(new Date()).format("MM/DD/YYYY");
 
-const numContacts = 50 - 25;
+const numContacts = 60;
 
 (async () => {
     try {
         const getCampaigns = await Airtable.getCampaigns();
         let accounts = Helpers.accountsToRun(getCampaigns);
 
-        // accounts = accounts.filter(
-        //     (account) =>
-        //         account.Account !== "Berrong" &&
-        //         account.Account !== "Guardian Construction Group" &&
-        //         account.Account !== "HD Roofing" &&
-        //         account.Account !== "Red Leaf Solutions"
-        // );
-
         accounts = accounts.filter(
             (account) =>
-                account.Account === "Berrong" ||
-                account.Account === "Guardian Construction Group" ||
-                account.Account === "HD Roofing" ||
-                account.Account === "Red Leaf Solutions"
+                account.Account !== "Berrong" &&
+                account.Account !== "Guardian Construction Group" &&
+                account.Account !== "HD Roofing" &&
+                account.Account !== "Red Leaf Solutions"
         );
 
-        // await slackNotification("Launching texts...");
+        // accounts = accounts.filter(
+        //     (account) =>
+        //         account.Account === "Berrong" ||
+        //         account.Account === "Guardian Construction Group" ||
+        //         account.Account === "HD Roofing" ||
+        //         account.Account === "Red Leaf Solutions"
+        // );
+
+        // accounts = accounts.filter((account) => account.Account === "XL Roofing");
+
+        await slackNotification("Launching texts...");
 
         for (let i = 1; i < numContacts + 1; i++) {
             for (let account of accounts) {
@@ -64,6 +66,7 @@ const numContacts = 50 - 25;
                             await Airtable.updateContact(account["Base ID"], contact.recordID, {
                                 "In Campaign": true,
                                 Campaign: account.Campaign,
+                                "Highlevel ID": texted.id,
                             });
 
                             console.log(
