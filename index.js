@@ -3,6 +3,8 @@ require("dotenv").config();
 const moment = require("moment");
 
 const textOutreach = require("./src/textContact");
+const numTextContacts = require("./src/numTextContacts");
+
 const AirtableApi = require("./src/airtable");
 const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
@@ -44,22 +46,25 @@ const numContacts = 60;
                 }
             }
 
-            // if (i === numContacts) {
-            //     const contacts = await Airtable.getContacts(account["Base ID"], view);
+            if (i === numContacts) {
+                const arrayNumContacts = accounts.map((account) => numTextContacts(account));
 
-            //     await Airtable.updateCampaign(account.recordID, {
-            //         "Campaign Status": "Live",
-            //         "Contacts Left": contacts.length,
-            //         "Last Updated": today,
-            //     });
+                const numContactResults = await Promise.all(arrayNumContacts);
 
-            //     if (contacts.length <= 150) {
-            //         await slackNotification(
-            //             `\n*Account:* ${account.Account}\n*Campaign:* ${account.Campaign} \n*Number of contacts:* ${contacts.length}\n`
-            //         );
-            //     }
-            // } else {
-            // }
+                for (let result of numContactResults) {
+                    await Airtable.updateCampaign(result.recordID, {
+                        "Campaign Status": "Live",
+                        "Contacts Left": result.numContacts.length,
+                        "Last Updated": today,
+                    });
+
+                    if (result.numContacts.length <= 150) {
+                        await slackNotification(
+                            `\n*Account:* ${result.Account}\n*Campaign:* ${result.Campaign} \n*Number of contacts:* ${result.numContacts.length}\n`
+                        );
+                    }
+                }
+            }
 
             console.log(`\n --- Texts sent: ${i} --- \n`);
             await Helpers.minutesWait(2);
