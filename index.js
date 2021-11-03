@@ -21,24 +21,6 @@ const numContacts = 60;
         const getCampaigns = await Airtable.getCampaigns();
         let accounts = Helpers.accountsToRun(getCampaigns);
 
-        accounts = accounts.filter(
-            (account) =>
-                account.Account !== "Berrong" &&
-                account.Account !== "Guardian Construction Group" &&
-                account.Account !== "HD Roofing" &&
-                account.Account !== "Red Leaf Solutions"
-        );
-
-        // accounts = accounts.filter(
-        //     (account) =>
-        //         account.Account === "Berrong" ||
-        //         account.Account === "Guardian Construction Group" ||
-        //         account.Account === "HD Roofing" ||
-        //         account.Account === "Red Leaf Solutions"
-        // );
-
-        // accounts = accounts.filter((account) => account.Account === "XL Roofing");
-
         await slackNotification("Launching texts...");
 
         for (let i = 1; i < numContacts + 1; i++) {
