@@ -1,7 +1,7 @@
 const moment = require("moment");
 const today = moment(new Date()).format("YYYY-MM-DD");
 
-module.exports = class HelperApi {
+class Helpers {
     async minutesWait(minutes) {
         return await new Promise((resolve) => {
             setTimeout(resolve, 60000 * minutes);
@@ -151,4 +151,6 @@ module.exports = class HelperApi {
     sortByKeyString(array, key) {
         return array.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
     }
-};
+}
+
+module.exports = new Helpers();
