@@ -2,8 +2,8 @@ require("dotenv").config();
 
 const axios = require("axios");
 
-const HighlevelApi = require("./highLevel");
-const AirtableApi = require("./airtable");
+const HighlevelApi = require("./HighLevel");
+const AirtableApi = require("./Airtable");
 const _ = require("./Helpers");
 
 const slackNotification = require("./slackNotification");

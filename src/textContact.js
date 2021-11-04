@@ -1,13 +1,13 @@
-const highLevel = require("./highLevel");
-const { mapContact } = require("./helpers");
-const { getRecord, updateRecord } = require("./airtable");
+const highLevel = require("./HighLevel");
+const _ = require("./Helpers");
+const { getRecord, updateRecord } = require("./Airtable");
 
 let record;
 
 module.exports = async (client) => {
     try {
         record = await getRecord(client);
-        const contact = mapContact(record);
+        const contact = _.mapContact(record);
 
         // add to highLevel / text contact
         const texted = await highLevel(client.highlevelKey, contact);

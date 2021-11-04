@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const AirtableApi = require("./airtable");
+const AirtableApi = require("./Airtable");
 
 const Airtable = new AirtableApi(process.env.AIRTABLE_API_KEY);
 
