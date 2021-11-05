@@ -21,6 +21,8 @@ const numContacts = 60;
         const getCampaigns = await Airtable.getCampaigns();
         let accounts = _.accountsToRun(getCampaigns);
 
+        accounts = accounts.filter((acc) => acc.Account === "Farha Roofing - Michael");
+
         await slackNotification("Launching texts...");
 
         for (let i = 1; i < numContacts + 1; i++) {
