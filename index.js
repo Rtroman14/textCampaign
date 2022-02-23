@@ -21,6 +21,13 @@ const numContacts = 60;
         const getCampaigns = await Airtable.getCampaigns();
         let accounts = _.accountsToRun(getCampaigns);
 
+        // accounts = accounts.filter(
+        //     (acc) =>
+        //         acc.Account === "J&M Roofing" ||
+        //         acc.Account === "All Elements" ||
+        //         acc.Account === "Farha Roofing - Lamar"
+        // );
+
         await slackNotification("Launching texts...");
 
         for (let i = 1; i < numContacts + 1; i++) {
@@ -29,7 +36,7 @@ const numContacts = 60;
             const results = await Promise.all(arrayTextOutreach);
 
             for (let result of results) {
-                if (result.status === "Need More Contacts") {
+                if (result?.status === "Need More Contacts") {
                     if (i > 2) {
                         await Airtable.updateCampaign(result.recordID, {
                             "Campaign Status": result.status,
